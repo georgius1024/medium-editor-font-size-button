@@ -17,7 +17,7 @@
 import "medium-editor/dist/css/medium-editor.css";
 import "medium-editor/dist/css/themes/flat.css";
 import editor from "vue2-medium-editor";
-import FontSizeButton from './FontSizeButton'
+import FontSizeButton from "./FontSizeButton";
 
 export default {
   name: "App",
@@ -74,7 +74,11 @@ export default {
     background-color: transparent;
     color: inherit;
     margin-right: 2px;
-    &:focus, &:focus-visible {
+    &:focus,
+    &:focus-visible {
+      outline: 1px solid white;
+    }
+    &:hover {
       outline: 1px solid white;
     }
   }

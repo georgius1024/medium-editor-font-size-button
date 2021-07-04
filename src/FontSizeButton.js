@@ -28,18 +28,18 @@ const FontSizeButton = editor.MediumEditor.Extension.extend({
     this.on(
       this.button.querySelector(".inc"),
       "click",
-      this.handleInc.bind(this)
+      this.handleIncrement.bind(this)
     );
     this.on(
       this.button.querySelector(".dec"),
       "click",
-      this.handleDec.bind(this)
+      this.handleDecrement.bind(this)
     );
     this.on(this.base.origElements, "click", this.updateCurrentSize.bind(this));
     this.on(
       this.button.querySelector(".display"),
       "keydown",
-      this.handleKeyEnter.bind(this)
+      this.handleKeyInput.bind(this)
     );
     this.base.subscribe("positionToolbar", this.saveSelection.bind(this));
   },
@@ -60,17 +60,16 @@ const FontSizeButton = editor.MediumEditor.Extension.extend({
     this.button.querySelector(".display").selection =
       this.base.exportSelection();
   },
-  handleInc() {
+  handleIncrement() {
     this.currentSize = `${+this.currentSize.slice(0, -2) + 1}px`;
     this.applyCurrentSize();
   },
-  handleDec() {
+  handleDecrement() {
     this.currentSize = `${+this.currentSize.slice(0, -2) - 1}px`;
     this.applyCurrentSize();
   },
-  handleKeyEnter(event) {
+  handleKeyInput(event) {
     const savedSelection = this.button.querySelector(".display").selection;
-    console.log(savedSelection);
     if (!savedSelection) {
       return;
     }
@@ -103,7 +102,6 @@ const FontSizeButton = editor.MediumEditor.Extension.extend({
         break;
     }
   },
-
   applyCurrentSize() {
     let selectionState = this.base.exportSelection();
     if (selectionState.start === selectionState.end) {
