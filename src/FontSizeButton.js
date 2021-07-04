@@ -73,33 +73,21 @@ const FontSizeButton = editor.MediumEditor.Extension.extend({
     if (!savedSelection) {
       return;
     }
-    const fontSizeAction = (callback) => {
+    const fontSizeAction = (newSize) => {
       event.preventDefault();
       event.stopPropagation();
       this.base.importSelection(savedSelection, true);
-      this.currentSize = event.target.value;
-      callback();
+      this.currentSize = newSize
+      this.applyCurrentSize();
       event.target.focus();
     };
     switch (event.key) {
       case "Enter":
-        fontSizeAction(() => {
-          this.currentSize = event.target.value;
-          this.applyCurrentSize();
-        });
-        break;
+        return fontSizeAction(event.target.value);
       case "ArrowUp":
-        fontSizeAction(() => {
-          this.currentSize = `${+this.currentSize.slice(0, -2) + 1}px`;
-          this.applyCurrentSize();
-        });
-        break;
+        return fontSizeAction(`${+this.currentSize.slice(0, -2) + 1}px`);
       case "ArrowDown":
-        fontSizeAction(() => {
-          this.currentSize = `${+this.currentSize.slice(0, -2) - 1}px`;
-          this.applyCurrentSize();
-        });
-        break;
+        return fontSizeAction(`${+this.currentSize.slice(0, -2) - 1}px`);
     }
   },
   applyCurrentSize() {
