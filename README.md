@@ -1,4 +1,4 @@
-# mmor
+# Medium editor font size button
 
 ## Project setup
 ```
