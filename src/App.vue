@@ -13,11 +13,11 @@
 </template>
 
 <script>
-/* eslint-disable */
 import "medium-editor/dist/css/medium-editor.css";
-import "medium-editor/dist/css/themes/flat.css";
+import "medium-editor/dist/css/themes/mani.css";
 import editor from "vue2-medium-editor";
 import FontSizeButton from "./FontSizeButton";
+import FontNameButton from "./FontNameButton";
 
 export default {
   name: "App",
@@ -30,9 +30,22 @@ export default {
       options: {
         extensions: {
           "font-size": new FontSizeButton(),
+          "font-name": new FontNameButton(),
         },
         toolbar: {
-          buttons: ["font-size", "bold"],
+          buttons: [
+            "font-name",
+            "bold",
+            "italic",
+            "underline",
+            "anchor",
+            "unorderedlist",
+            "justifyLeft",
+            "justifyCenter",
+            "justifyRight",
+            "removeFormat",
+            "font-size",
+          ],
           static: true,
           sticky: true,
           align: "center",
@@ -55,14 +68,33 @@ export default {
 
 <style lang="scss">
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: Avenir;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
 }
-
+.font-picker-widget {
+  .font-name {
+    background-color: transparent;
+    padding: 4px;
+    outline: none;
+    border: none;
+    &:focus,
+    &:focus-visible {
+      outline: 1px solid white;
+    }
+    &:hover {
+      outline: 1px solid white;
+    }
+    & > * {
+      margin: 4px;
+      outline: none;
+      border: none;
+    }
+  }
+}
 .size-picker-widget {
   display: flex;
   flex-direction: row;

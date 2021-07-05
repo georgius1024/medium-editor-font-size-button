@@ -77,7 +77,7 @@ const FontSizeButton = editor.MediumEditor.Extension.extend({
       event.preventDefault();
       event.stopPropagation();
       this.base.importSelection(savedSelection, true);
-      this.currentSize = newSize
+      this.currentSize = newSize;
       this.applyCurrentSize();
       event.target.focus();
     };
