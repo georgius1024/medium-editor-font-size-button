@@ -1,14 +1,52 @@
 <template>
   <div id="app">
-    editor
-    <medium-editor
-      :text="text"
-      :options="options"
-      custom-tag="div"
-      @edit="processEditOperation"
-    />
+    <div style="display: flex">
+      <div style="border-right: 1px solid #333; width: 500px">
+        <h1>Tiltle</h1>
+        <medium-editor
+          v-once
+          :text="text"
+          :options="options()"
+          custom-tag="div"
+          @edit="updateTitle"
+        />
+      </div>
+      <div style="width: 400px">
+        <code>{{ displayTitle || text }}</code>
+      </div>
+    </div>
     <hr />
-    <code>{{ text }}</code>
+    <div style="display: flex">
+      <div style="border-right: 1px solid #333; width: 500px">
+        <h1>Description</h1>
+        <medium-editor
+          v-once
+          :text="paragraphs"
+          :options="options()"
+          custom-tag="div"
+          @edit="updateText"
+        />
+      </div>
+      <div style="width: 400px">
+        <code>{{ displayDescription || paragraphs }}</code>
+      </div>
+    </div>
+    <hr />
+    <div style="display: flex">
+      <div style="border-right: 1px solid #333; width: 500px">
+        <h1>Button</h1>
+        <medium-editor
+          v-once
+          :text="button"
+          :options="options()"
+          custom-tag="button"
+          @edit="updateButton"
+        />
+      </div>
+      <div style="width: 400px">
+        <code>{{ displayButton || button }}</code>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -18,6 +56,7 @@ import "medium-editor/dist/css/themes/mani.css";
 import editor from "vue2-medium-editor";
 import FontSizeButton from "./FontSizeButton";
 import FontNameButton from "./FontNameButton";
+import LineHeightButton from "./LineHeightButton";
 
 export default {
   name: "App",
@@ -27,14 +66,30 @@ export default {
   data() {
     return {
       text: `<p style="font-size: 36px;">Click <span style="font-size: 27px;">here</span>&nbsp; to edit it or <span style="color: rgb(240, 50, 230);">highlight</span> the text to style it</p>`,
-      options: {
+      paragraphs: `
+      <p>The iconic ASICS Tiger GEL-Lyte III was originally released in 1990.</p>
+      <p>Having over two decades of performance heritage, it offers fine design detailing and a padded split tongue to eliminate tongue movement, built on a sleek silhouette.</p>
+      <p>It comes as no surprise the Gel-Lyte III is a fast growing popular choice for sneaker enthusiasts all over the world.</p>
+      `,
+      button: `Shop $ 242`,
+      displayTitle: "",
+      displayDescription: "",
+      displayButton: "",
+    };
+  },
+  methods: {
+    options() {
+      return {
         extensions: {
           "font-size": new FontSizeButton(),
           "font-name": new FontNameButton(),
+          "line-height": new LineHeightButton(),
         },
         toolbar: {
           buttons: [
             "font-name",
+            "font-size",
+            "line-height",
             "bold",
             "italic",
             "underline",
@@ -44,7 +99,6 @@ export default {
             "justifyCenter",
             "justifyRight",
             "removeFormat",
-            "font-size",
           ],
           static: true,
           sticky: true,
@@ -55,12 +109,16 @@ export default {
           text: "Type your text ПРЯМО ТУТ!!!",
           hideOnClick: true,
         },
-      },
-    };
-  },
-  methods: {
-    processEditOperation(operation) {
-      this.text = operation.api.origElements.innerHTML;
+      };
+    },
+    updateTitle(operation) {
+      this.displayTitle = operation.api.origElements.innerHTML;
+    },
+    updateText(operation) {
+      this.displayDescription = operation.api.origElements.innerHTML;
+    },
+    updateButton(operation) {
+      this.dsplayButton = operation.api.origElements.innerHTML;
     },
   },
 };
