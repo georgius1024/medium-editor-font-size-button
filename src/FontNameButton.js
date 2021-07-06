@@ -1,7 +1,5 @@
 import editor from "vue2-medium-editor";
 
-const MediumEditor = editor.MediumEditor;
-
 const FontNameButton = editor.MediumEditor.Extension.extend({
   name: "font-name",
 
@@ -21,18 +19,15 @@ const FontNameButton = editor.MediumEditor.Extension.extend({
       "click",
       this.applyFont.bind(this)
     );
-    this.on(this.base.origElements, "click", this.updateCurrentFont.bind(this));
+    this.on(this.base.origElements, "click", this.detectCurrentFont.bind(this));
     this.base.subscribe("positionToolbar", this.saveSelection.bind(this));
   },
   getButton() {
     return this.button;
   },
-  updateCurrentFont() {
-    const range = MediumEditor.selection.getSelectionRange(this.document);
-    this.currentFont = window.getComputedStyle(
-      range.startContainer.parentElement
-    ).fontFamily;
-
+  detectCurrentFont() {
+    const selection = this.base.getSelectedParentElement();
+    this.currentFont = window.getComputedStyle(selection).fontFamily;
     this.displayCurrentFont();
   },
   displayCurrentFont() {
@@ -46,40 +41,36 @@ const FontNameButton = editor.MediumEditor.Extension.extend({
   },
   applyFont() {
     this.currentFont = this.button.querySelector(".font-name").value;
-    let selectionState = this.base.exportSelection();
+
+    const selectionState = this.base.exportSelection();
     if (selectionState.start === selectionState.end) {
-      const range = MediumEditor.selection.getSelectionRange(this.document);
-      this.base.selectElement(range.startContainer.parentElement);
-      const start = range.startContainer.parentElement;
-      if (start.nodeType === 3 || start.nodeName === "BR") {
-        this.base.selectElement(start.parentElement);
-      } else {
-        this.base.selectElement(start);
-      }
-      selectionState = this.base.exportSelection();
-    }
-    const fontName = "imaginary";
-    this.document.execCommand("fontName", false, fontName);
-    const fontElement = this.document.querySelector('font[face="imaginary"]');
-    let parent = fontElement;
-
-    while (
-      parent.innerText === parent.parentElement.innerText &&
-      parent.parentElement !== this.base.origElements
-    ) {
-      parent = parent.parentElement;
-    }
-
-    if (fontElement === parent) {
-      const spanElement = this.document.createElement("span");
-      spanElement.innerText = fontElement.innerText;
-      spanElement.style.fontFamily = this.currentFont;
-      parent.parentNode.replaceChild(spanElement, fontElement);
+      const selection = this.base.getSelectedParentElement();
+      this.base.selectElement(selection);
+      selection.style.fontFamily = this.currentFont;
     } else {
-      this.document.execCommand("undo", false);
-      parent.style.fontFamily = this.currentFont;
+      const fontName = "imaginary";
+      this.document.execCommand("fontName", false, fontName);
+      const fontElement = this.document.querySelector('font[face="imaginary"]');
+      let parent = fontElement;
+
+      while (
+        parent.innerText === parent.parentElement.innerText &&
+        parent.parentElement !== this.base.origElements
+      ) {
+        parent = parent.parentElement;
+      }
+
+      if (fontElement === parent) {
+        const spanElement = this.document.createElement("span");
+        spanElement.innerText = fontElement.innerText;
+        spanElement.style.fontFamily = this.currentFont;
+        parent.parentNode.replaceChild(spanElement, fontElement);
+      } else {
+        this.document.execCommand("undo", false);
+        parent.style.fontFamily = this.currentFont;
+      }
+      this.base.importSelection(selectionState, true);
     }
-    this.base.importSelection(selectionState, true);
     this.displayCurrentFont();
     this.base.checkContentChanged();
   },
