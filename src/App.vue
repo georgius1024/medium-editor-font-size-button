@@ -1,10 +1,12 @@
 <template>
-  <div id="app">
+  <div id="app" >
     <div style="display: flex">
       <div style="border-right: 1px solid #333; width: 500px">
         <h1>Tiltle</h1>
         <medium-editor
           v-once
+          :key="key"
+          ref="title" 
           :text="text"
           :options="options()"
           custom-tag="div"
@@ -21,6 +23,8 @@
         <h1>Description</h1>
         <medium-editor
           v-once
+          :key="key"
+          ref="description" 
           :text="paragraphs"
           :options="options()"
           custom-tag="div"
@@ -37,6 +41,8 @@
         <h1>Button</h1>
         <medium-editor
           v-once
+          :key="key"
+          ref="button" 
           :text="button"
           :options="options()"
           custom-tag="button"
@@ -47,6 +53,8 @@
         <code>{{ displayButton || button }}</code>
       </div>
     </div>
+    <hr>
+    <button @click="reset">Reset</button>
   </div>
 </template>
 
@@ -75,6 +83,7 @@ export default {
       displayTitle: "",
       displayDescription: "",
       displayButton: "",
+      key: 1,
     };
   },
   methods: {
@@ -118,7 +127,13 @@ export default {
       this.displayDescription = operation.api.origElements.innerHTML;
     },
     updateButton(operation) {
-      this.dsplayButton = operation.api.origElements.innerHTML;
+      this.displayButton = operation.api.origElements.innerHTML;
+    },
+    reset() {
+      this.text = this.$refs.title.$el.innerHTML ;;//this.displayTitle;
+      this.paragraphs = this.$refs.description.$el.innerHTML
+      this.button = this.$refs.button.$el.innerHTML
+      this.key = this.key + 1;
     },
   },
 };
