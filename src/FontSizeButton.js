@@ -1,6 +1,18 @@
 import editor from "vue2-medium-editor";
 
-const MediumEditor = editor.MediumEditor;
+function withPixels(size) {
+  if (String(size).slice(-2) !== "px") {
+    return `${size}px`;
+  }
+  return size;
+}
+
+function withoutPixels(size) {
+  if (size.slice(-2) === "px") {
+    return +size.slice(0, -2);
+  }
+  return +size;
+}
 
 const FontSizeButton = editor.MediumEditor.Extension.extend({
   name: "font-size",
@@ -35,7 +47,11 @@ const FontSizeButton = editor.MediumEditor.Extension.extend({
       "click",
       this.handleDecrement.bind(this)
     );
-    this.on(this.base.origElements, "click", this.updateCurrentSize.bind(this));
+    this.on(
+      this.base.origElements,
+      "click",
+      this.measureCurrentFontSize.bind(this)
+    );
     this.on(
       this.button.querySelector(".display"),
       "keydown",
@@ -46,11 +62,9 @@ const FontSizeButton = editor.MediumEditor.Extension.extend({
   getButton() {
     return this.button;
   },
-  updateCurrentSize() {
-    const range = MediumEditor.selection.getSelectionRange(this.document);
-    this.currentSize = window.getComputedStyle(
-      range.startContainer.parentElement
-    ).fontSize;
+  measureCurrentFontSize() {
+    const selection = this.base.getSelectedParentElement();
+    this.currentSize = window.getComputedStyle(selection).fontSize;
     this.displayCurrentSize();
   },
   displayCurrentSize() {
@@ -61,11 +75,11 @@ const FontSizeButton = editor.MediumEditor.Extension.extend({
       this.base.exportSelection();
   },
   handleIncrement() {
-    this.currentSize = `${+this.currentSize.slice(0, -2) + 1}px`;
+    this.currentSize = withPixels(withoutPixels(this.currentSize) + 1);
     this.applyCurrentSize();
   },
   handleDecrement() {
-    this.currentSize = `${+this.currentSize.slice(0, -2) - 1}px`;
+    this.currentSize = withPixels(withoutPixels(this.currentSize) - 1);
     this.applyCurrentSize();
   },
   handleKeyInput(event) {
@@ -83,48 +97,43 @@ const FontSizeButton = editor.MediumEditor.Extension.extend({
     };
     switch (event.key) {
       case "Enter":
-        return fontSizeAction(event.target.value);
+        return fontSizeAction(withPixels(event.target.value));
       case "ArrowUp":
-        return fontSizeAction(`${+this.currentSize.slice(0, -2) + 1}px`);
+        return fontSizeAction(withPixels(withoutPixels(this.currentSize) + 1));
       case "ArrowDown":
-        return fontSizeAction(`${+this.currentSize.slice(0, -2) - 1}px`);
+        return fontSizeAction(withPixels(withoutPixels(this.currentSize) - 1));
     }
   },
   applyCurrentSize() {
-    let selectionState = this.base.exportSelection();
+    const selectionState = this.base.exportSelection();
     if (selectionState.start === selectionState.end) {
-      const range = MediumEditor.selection.getSelectionRange(this.document);
-      this.base.selectElement(range.startContainer.parentElement);
-      const start = range.startContainer.parentElement;
-      if (start.nodeType === 3 || start.nodeName === "BR") {
-        this.base.selectElement(start.parentElement);
-      } else {
-        this.base.selectElement(start);
-      }
-      selectionState = this.base.exportSelection();
-    }
-    const fontName = "imaginary";
-    this.document.execCommand("fontName", false, fontName);
-    const fontElement = this.document.querySelector('font[face="imaginary"]');
-    let parent = fontElement;
-
-    while (
-      parent.innerText === parent.parentElement.innerText &&
-      parent.parentElement !== this.base.origElements
-    ) {
-      parent = parent.parentElement;
-    }
-
-    if (fontElement === parent) {
-      const spanElement = this.document.createElement("span");
-      spanElement.innerText = fontElement.innerText;
-      spanElement.style.fontSize = this.currentSize;
-      parent.parentNode.replaceChild(spanElement, fontElement);
+      const selection = this.base.getSelectedParentElement();
+      this.base.selectElement(selection);
+      selection.style.fontSize = this.currentSize;
     } else {
-      this.document.execCommand("undo", false);
-      parent.style.fontSize = this.currentSize;
+      const fontName = "imaginary";
+      this.document.execCommand("fontName", false, fontName);
+      const fontElement = this.document.querySelector('font[face="imaginary"]');
+      let parent = fontElement;
+
+      while (
+        parent.innerText === parent.parentElement.innerText &&
+        parent.parentElement !== this.base.origElements
+      ) {
+        parent = parent.parentElement;
+      }
+
+      if (fontElement === parent) {
+        const spanElement = this.document.createElement("span");
+        spanElement.innerText = fontElement.innerText;
+        spanElement.style.fontSize = this.currentSize;
+        parent.parentNode.replaceChild(spanElement, fontElement);
+      } else {
+        this.document.execCommand("undo", false);
+        parent.style.fontSize = this.currentSize;
+      }
+      this.base.importSelection(selectionState, true);
     }
-    this.base.importSelection(selectionState, true);
     this.displayCurrentSize();
     this.base.checkContentChanged();
   },
