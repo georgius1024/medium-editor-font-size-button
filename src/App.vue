@@ -121,16 +121,16 @@ export default {
       };
     },
     updateTitle(operation) {
-      this.displayTitle = operation.api.origElements.innerHTML;
+      this.text = this.displayTitle = operation.api.origElements.innerHTML;
     },
     updateText(operation) {
-      this.displayDescription = operation.api.origElements.innerHTML;
+      this.paragraphs = this.displayDescription = operation.api.origElements.innerHTML;
     },
     updateButton(operation) {
-      this.displayButton = operation.api.origElements.innerHTML;
+      this.button = this.displayButton = operation.api.origElements.innerHTML;
     },
     reset() {
-      this.text = this.$refs.title.$el.innerHTML ;;//this.displayTitle;
+      this.text = this.$refs.title.$el.innerHTML
       this.paragraphs = this.$refs.description.$el.innerHTML
       this.button = this.$refs.button.$el.innerHTML
       this.key = this.key + 1;

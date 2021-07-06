@@ -124,25 +124,14 @@ const LineHeightButton = editor.MediumEditor.Extension.extend({
     this.document.execCommand("fontName", false, fontName);
     const fontElement = this.document.querySelector('font[face="imaginary"]');
     let parent = fontElement;
-
     while (
       parent.innerText === parent.parentElement.innerText &&
       parent.parentElement !== this.base.origElements
     ) {
       parent = parent.parentElement;
     }
-
-    if (fontElement === parent) {
-      const divElement = this.document.createElement("div");
-      divElement.innerText = fontElement.innerText;
-      divElement.style.lineHeight = this.currentSize;
-      parent.parentNode.replaceChild(divElement, fontElement);
-    } else {
-      this.document.execCommand("undo", false);
-      parent.style.lineHeight = this.currentSize;
-    }
+    parent.outerHTML = `<div style="line-height:${this.currentSize.toFixed(1)}">${fontElement.innerHTML}</div>`
     this.base.importSelection(selectionState, true);
-
     this.displayCurrentHeight();
     this.base.checkContentChanged();
   },
