@@ -1,5 +1,11 @@
 # Medium editor font size button
 
+[ ] colorPicker
+[x] fontSize
+[x] fontName
+[ ] lineHeight
+[ ] anchor
+[ ] customFields
 ## Project setup
 ```
 yarn install
