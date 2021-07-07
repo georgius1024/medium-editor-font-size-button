@@ -50,8 +50,19 @@ const LineHeightButton = editor.MediumEditor.Extension.extend({
   },
   measureCurrentLineHeight() {
     const selection = this.base.getSelectedParentElement();
-    this.currentSize =
-      Number(window.getComputedStyle(selection).lineHeight) || 1;
+    let lineHeight = window.getComputedStyle(selection).lineHeight;
+    if (selection.style.lineHeight) {
+      lineHeight = selection.style.lineHeight;
+    }
+
+    if (lineHeight === "normal") {
+      this.currentSize = 1;
+    } else if (lineHeight.includes("px")) {
+      const fontSize = window.getComputedStyle(selection).fontSize.slice(0, -2);
+      this.currentSize = lineHeight.slice(0, -2) / fontSize || 1;
+    } else {
+      this.currentSize = Number(lineHeight) || 1;
+    }
     this.displayCurrentHeight();
   },
   displayCurrentHeight() {
@@ -95,7 +106,7 @@ const LineHeightButton = editor.MediumEditor.Extension.extend({
   },
   applyCurrentSize() {
     function isBlockElement(element) {
-      return ["P", "DIV"].includes(element.tagName);
+      return ["P", "DIV", "BUTTON"].includes(element.tagName);
     }
     const findBlockElement = (element) => {
       while (!isBlockElement(element) && element !== this.base.origElements) {
@@ -107,7 +118,6 @@ const LineHeightButton = editor.MediumEditor.Extension.extend({
     };
     this.displayCurrentHeight();
     const selectionState = this.base.exportSelection();
-
     if (selectionState.start === selectionState.end) {
       const selection = findBlockElement(this.base.getSelectedParentElement());
       if (selection) {
@@ -130,7 +140,9 @@ const LineHeightButton = editor.MediumEditor.Extension.extend({
     ) {
       parent = parent.parentElement;
     }
-    parent.outerHTML = `<div style="line-height:${this.currentSize.toFixed(1)}">${fontElement.innerHTML}</div>`
+    parent.outerHTML = `<div style="line-height:${this.currentSize.toFixed(
+      1
+    )}">${fontElement.innerHTML}</div>`;
     this.base.importSelection(selectionState, true);
     this.displayCurrentHeight();
     this.base.checkContentChanged();

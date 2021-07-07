@@ -45,7 +45,7 @@
           ref="button" 
           :text="button"
           :options="options()"
-          custom-tag="button"
+          custom-tag="div"
           @edit="updateButton"
         />
       </div>
@@ -79,7 +79,7 @@ export default {
       <p>Having over two decades of performance heritage, it offers fine design detailing and a padded split tongue to eliminate tongue movement, built on a sleek silhouette.</p>
       <p>It comes as no surprise the Gel-Lyte III is a fast growing popular choice for sneaker enthusiasts all over the world.</p>
       `,
-      button: `Shop $ 242`,
+      button: `<a href="#" class="button">Shop $ 242</a>`,
       displayTitle: "",
       displayDescription: "",
       displayButton: "",
@@ -205,11 +205,21 @@ export default {
 <style>
 .medium-editor-element {
   outline: none;
+  min-height: unset;
 }
 
 .medium-editor-placeholder:after {
   text-align: center;
   left: 0;
   right: 0;
+}
+</style>
+<style>
+  .button {
+    background-color: #ccc;
+    padding: 6px;
+    border: 1px solid #ccc;
+    display: inline-flex;
+    align-items: center
 }
 </style>
