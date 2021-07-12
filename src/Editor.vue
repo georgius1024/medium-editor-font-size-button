@@ -1,9 +1,6 @@
 <template>
-  <div id="app">
-    <div style="display: flex">
-      <div style="border-right: 1px solid #333; width: 500px">
-        <h1>Tiltle</h1>
-        <div :key="key">
+  <div>
+    <slot></slot>
           <medium-editor
             v-once
             ref="title"
@@ -11,62 +8,9 @@
             :options="options()"
             custom-tag="div"
             @edit="updateTitle"
-            @editorCreated="handleTitleCreated"
-          />
-        </div>
-      </div>
-      <div style="width: 400px">
-        <code>{{ displayTitle || text }}</code>
-      </div>
-    </div>
-    <hr />
-    <div style="display: flex">
-      <div style="border-right: 1px solid #333; width: 500px">
-        <h1>Description</h1>
-        <div :key="key">
-          <medium-editor
-            v-once
-            ref="description"
-            :text="paragraphs"
-            :options="options()"
-            custom-tag="div"
-            @edit="updateText"
-          />
-        </div>
-      </div>
-      <div style="width: 400px">
-        <code>{{ displayDescription || paragraphs }}</code>
-      </div>
-    </div>
-    <hr />
-    <div style="display: flex">
-      <div style="border-right: 1px solid #333; width: 500px">
-        <h1>Button</h1>
-        <div :key="key">
-          <medium-editor
-            v-once
-            ref="button"
-            :text="button"
-            :options="options()"
-            custom-tag="div"
-            @edit="updateButton"
-          />
-        </div>
-      </div>
-      <div style="width: 400px">
-        <code>{{ displayButton || button }}</code>
-      </div>
-    </div>
-    <hr />
-    <label>
-      Link color
-      <input v-model="linkColor" type="color" @input="paintLinks" />
-    </label>
-    <br />
-    <button @click="reset">Reset</button>
+          />    
   </div>
 </template>
-
 <script>
 import "medium-editor/dist/css/medium-editor.css";
 import "medium-editor/dist/css/themes/mani.css";
@@ -74,27 +18,10 @@ import editor from "vue2-medium-editor";
 import FontSizeButton from "./FontSizeButton";
 import FontNameButton from "./FontNameButton";
 import LineHeightButton from "./LineHeightButton";
-import LinkForm from "./LinkForm";
 export default {
-  name: "App",
+  name: "Editor",
   components: {
     "medium-editor": editor,
-  },
-  data() {
-    return {
-      linkColor: "#00ff00",
-      text: `<p style="font-size: 36px;">Click <span style="font-size: 27px;">here</span>&nbsp; to edit it or <span style="color: rgb(240, 50, 230);">highlight</span> the text to style it</p>`,
-      paragraphs: `
-      <p>The iconic ASICS Tiger GEL-Lyte III was originally released in 1990.</p>
-      <p>Having over two decades of performance heritage, it offers fine design detailing and a padded split tongue to eliminate tongue movement, built on a sleek silhouette.</p>
-      <p>It comes as no surprise the Gel-Lyte III is a fast growing popular choice for sneaker enthusiasts all over the world.</p>
-      `,
-      button: `<a href="#" class="button">Shop $ 242</a>`,
-      displayTitle: "",
-      displayDescription: "",
-      displayButton: "",
-      key: 1,
-    };
   },
   methods: {
     options() {
@@ -103,7 +30,6 @@ export default {
           "font-size": new FontSizeButton(),
           "font-name": new FontNameButton(),
           "line-height": new LineHeightButton(),
-          "link-form": new LinkForm(() => this.paintLinks()),
         },
         toolbar: {
           buttons: [
@@ -113,7 +39,7 @@ export default {
             "bold",
             "italic",
             "underline",
-            "link-form",
+            "anchor",
             "unorderedlist",
             "justifyLeft",
             "justifyCenter",
@@ -166,7 +92,7 @@ export default {
         this.linkColor
       );
       this.button = getTextWithFixedLinksColor(this.button, this.linkColor);
-      //this.key = this.key + 1;
+      this.key = this.key + 1;
     },
   },
 };
