@@ -75,11 +75,11 @@ const LineHeightButton = editor.MediumEditor.Extension.extend({
       this.base.exportSelection();
   },
   handleIncrement() {
-    this.currentSize = this.currentSize + 0.1;
+    this.currentSize = Math.min(this.currentSize + 0.1, 4);
     this.applyCurrentSize();
   },
   handleDecrement() {
-    this.currentSize = this.currentSize - 0.1;
+    this.currentSize = Math.max(this.currentSize - 0.1, 0.1);
     this.applyCurrentSize();
   },
   handleKeyInput(event) {
@@ -91,7 +91,7 @@ const LineHeightButton = editor.MediumEditor.Extension.extend({
       event.preventDefault();
       event.stopPropagation();
       this.base.importSelection(savedSelection, true);
-      this.currentSize = newSize.toFixed(1);
+      this.currentSize = Math.min(Math.max(newSize, 0.1), 4);
       this.applyCurrentSize();
       event.target.focus();
     };
@@ -99,52 +99,17 @@ const LineHeightButton = editor.MediumEditor.Extension.extend({
       case "Enter":
         return fontSizeAction(+event.target.value);
       case "ArrowUp":
-        return fontSizeAction(this.currentSize + 0.1);
+        return fontSizeAction(+this.currentSize + 0.1);
       case "ArrowDown":
-        return fontSizeAction(this.currentSize - 0.1);
+        return fontSizeAction(+this.currentSize - 0.1);
     }
   },
   applyCurrentSize() {
-    function isBlockElement(element) {
-      return ["P", "DIV", "BUTTON"].includes(element.tagName);
-    }
-    const findBlockElement = (element) => {
-      while (!isBlockElement(element) && element !== this.base.origElements) {
-        element = element.parentElement;
-      }
-      if (element !== this.base.origElements) {
-        return element;
-      }
-    };
     this.displayCurrentHeight();
-    const selectionState = this.base.exportSelection();
-    if (selectionState.start === selectionState.end) {
-      const selection = findBlockElement(this.base.getSelectedParentElement());
-      if (selection) {
-        this.base.selectElement(selection);
-        selection.style.lineHeight = this.currentSize;
-      } else {
-        this.base.origElements.innerHTML = `<div style="line-height:${this.currentSize}">${this.base.origElements.innerHTML}</div>`;
-      }
-      this.base.checkContentChanged();
-      return;
-    }
-
-    const fontName = "imaginary";
-    this.document.execCommand("fontName", false, fontName);
-    const fontElement = this.document.querySelector('font[face="imaginary"]');
-    let parent = fontElement;
-    while (
-      parent.innerText === parent.parentElement.innerText &&
-      parent.parentElement !== this.base.origElements
-    ) {
-      parent = parent.parentElement;
-    }
-    parent.outerHTML = `<div style="line-height:${this.currentSize.toFixed(
-      1
-    )}">${fontElement.innerHTML}</div>`;
-    this.base.importSelection(selectionState, true);
-    this.displayCurrentHeight();
+    const cssLineHeight = Number(this.currentSize).toFixed(1);
+    const selection = this.base.getSelectedParentElement();
+    this.base.selectElement(selection);
+    selection.style.lineHeight = cssLineHeight;
     this.base.checkContentChanged();
   },
 });

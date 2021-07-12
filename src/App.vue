@@ -1,12 +1,12 @@
 <template>
-  <div id="app" >
+  <div id="app">
     <div style="display: flex">
       <div style="border-right: 1px solid #333; width: 500px">
         <h1>Tiltle</h1>
         <medium-editor
           v-once
           :key="key"
-          ref="title" 
+          ref="title"
           :text="text"
           :options="options()"
           custom-tag="div"
@@ -24,7 +24,7 @@
         <medium-editor
           v-once
           :key="key"
-          ref="description" 
+          ref="description"
           :text="paragraphs"
           :options="options()"
           custom-tag="div"
@@ -42,7 +42,7 @@
         <medium-editor
           v-once
           :key="key"
-          ref="button" 
+          ref="button"
           :text="button"
           :options="options()"
           custom-tag="div"
@@ -53,7 +53,7 @@
         <code>{{ displayButton || button }}</code>
       </div>
     </div>
-    <hr>
+    <hr />
     <button @click="reset">Reset</button>
   </div>
 </template>
@@ -124,15 +124,16 @@ export default {
       this.text = this.displayTitle = operation.api.origElements.innerHTML;
     },
     updateText(operation) {
-      this.paragraphs = this.displayDescription = operation.api.origElements.innerHTML;
+      this.paragraphs = this.displayDescription =
+        operation.api.origElements.innerHTML;
     },
     updateButton(operation) {
       this.button = this.displayButton = operation.api.origElements.innerHTML;
     },
     reset() {
-      this.text = this.$refs.title.$el.innerHTML
-      this.paragraphs = this.$refs.description.$el.innerHTML
-      this.button = this.$refs.button.$el.innerHTML
+      this.text = this.$refs.title.$el.innerHTML;
+      this.paragraphs = this.$refs.description.$el.innerHTML;
+      this.button = this.$refs.button.$el.innerHTML;
       this.key = this.key + 1;
     },
   },
@@ -215,11 +216,11 @@ export default {
 }
 </style>
 <style>
-  .button {
-    background-color: #ccc;
-    padding: 6px;
-    border: 1px solid #ccc;
-    display: inline-flex;
-    align-items: center
+.button {
+  background-color: #ccc;
+  padding: 6px;
+  border: 1px solid #ccc;
+  display: inline-flex;
+  align-items: center;
 }
 </style>
