@@ -3,58 +3,48 @@
     <div style="display: flex">
       <div style="border-right: 1px solid #333; width: 500px">
         <h1>Tiltle</h1>
-        <div :key="key">
-          <medium-editor
-            v-once
-            ref="title"
-            :text="text"
-            :options="options()"
-            custom-tag="div"
-            @edit="updateTitle"
-            @editorCreated="handleTitleCreated"
-          />
-        </div>
+        <medium-editor
+          ref="title"
+          :text="title"
+          :options="options()"
+          custom-tag="div"
+          @edit="updateTitle"
+        />
       </div>
       <div style="width: 400px">
-        <code>{{ displayTitle || text }}</code>
+        <code>{{ title }}</code>
       </div>
     </div>
     <hr />
     <div style="display: flex">
       <div style="border-right: 1px solid #333; width: 500px">
         <h1>Description</h1>
-        <div :key="key">
-          <medium-editor
-            v-once
-            ref="description"
-            :text="paragraphs"
-            :options="options()"
-            custom-tag="div"
-            @edit="updateText"
-          />
-        </div>
+        <medium-editor
+          ref="description"
+          :text="description"
+          :options="options()"
+          custom-tag="div"
+          @edit="updateDescription"
+        />
       </div>
       <div style="width: 400px">
-        <code>{{ displayDescription || paragraphs }}</code>
+        <code>{{ description }}</code>
       </div>
     </div>
     <hr />
     <div style="display: flex">
       <div style="border-right: 1px solid #333; width: 500px">
         <h1>Button</h1>
-        <div :key="key">
-          <medium-editor
-            v-once
-            ref="button"
-            :text="button"
-            :options="options()"
-            custom-tag="div"
-            @edit="updateButton"
-          />
-        </div>
+        <medium-editor
+          ref="button"
+          :text="button"
+          :options="options()"
+          custom-tag="div"
+          @edit="updateButton"
+        />
       </div>
       <div style="width: 400px">
-        <code>{{ displayButton || button }}</code>
+        <code>{{ button }}</code>
       </div>
     </div>
     <hr />
@@ -75,6 +65,16 @@ import FontSizeButton from "./FontSizeButton";
 import FontNameButton from "./FontNameButton";
 import LineHeightButton from "./LineHeightButton";
 import LinkForm from "./LinkForm";
+
+const getTextWithFixedLinksColor = (text, color) => {
+  const doc = new DOMParser().parseFromString(text, "text/html");
+  const links = Array.from(doc.querySelectorAll("a"));
+  links.forEach((link) => {
+    link.style.color = color;
+  });
+  return doc.body.innerHTML;
+};
+
 export default {
   name: "App",
   components: {
@@ -83,8 +83,8 @@ export default {
   data() {
     return {
       linkColor: "#00ff00",
-      text: `<p style="font-size: 36px;">Click <span style="font-size: 27px;">here</span>&nbsp; to edit it or <span style="color: rgb(240, 50, 230);">highlight</span> the text to style it</p>`,
-      paragraphs: `
+      title: `<p style="font-size: 36px;">Click <span style="font-size: 27px;">here</span>&nbsp; to edit it or <span style="color: rgb(240, 50, 230);">highlight</span> the text to style it</p>`,
+      description: `
       <p>The iconic ASICS Tiger GEL-Lyte III was originally released in 1990.</p>
       <p>Having over two decades of performance heritage, it offers fine design detailing and a padded split tongue to eliminate tongue movement, built on a sleek silhouette.</p>
       <p>It comes as no surprise the Gel-Lyte III is a fast growing popular choice for sneaker enthusiasts all over the world.</p>
@@ -95,6 +95,9 @@ export default {
       displayButton: "",
       key: 1,
     };
+  },
+  created() {
+    this.paintLinks()
   },
   methods: {
     options() {
@@ -113,7 +116,7 @@ export default {
             "bold",
             "italic",
             "underline",
-            "link-form",
+            "anchor",
             "unorderedlist",
             "justifyLeft",
             "justifyCenter",
@@ -132,41 +135,36 @@ export default {
       };
     },
     updateTitle(operation) {
-      this.text = this.displayTitle = operation.api.origElements.innerHTML;
+      // this.title = getTextWithFixedLinksColor(
+      //   operation.api.origElements.innerHTML,
+      //   this.linkColor
+      // );
     },
-    updateText(operation) {
-      this.paragraphs = this.displayDescription =
-        operation.api.origElements.innerHTML;
+    updateDescription(operation) {
+      this.description = getTextWithFixedLinksColor(
+        operation.api.origElements.innerHTML,
+        this.linkColor
+      );
     },
     updateButton(operation) {
-      this.button = this.displayButton = operation.api.origElements.innerHTML;
+      this.button = getTextWithFixedLinksColor(
+        operation.api.origElements.innerHTML,
+        this.linkColor
+      );
     },
     reset() {
-      this.text = this.$refs.title.$el.innerHTML;
-      this.paragraphs = this.$refs.description.$el.innerHTML;
+      this.title = this.$refs.title.$el.innerHTML;
+      this.description = this.$refs.description.$el.innerHTML;
       this.button = this.$refs.button.$el.innerHTML;
       this.key = this.key + 1;
     },
-    handleTitleCreated(editor) {
-      console.log(editor)
-      editor.setContent(this.text, 0)
-    },
     paintLinks() {
-      const getTextWithFixedLinksColor = (text, color) => {
-        const doc = new DOMParser().parseFromString(text, "text/html");
-        const links = Array.from(doc.querySelectorAll("a"));
-        links.forEach((link) => {
-          link.style.color = color;
-        });
-        return doc.body.innerHTML;
-      };
-      this.text = getTextWithFixedLinksColor(this.text, this.linkColor);
-      this.paragraphs = getTextWithFixedLinksColor(
-        this.paragraphs,
+      this.title = getTextWithFixedLinksColor(this.title, this.linkColor);
+      this.description = getTextWithFixedLinksColor(
+        this.description,
         this.linkColor
       );
       this.button = getTextWithFixedLinksColor(this.button, this.linkColor);
-      //this.key = this.key + 1;
     },
   },
 };
