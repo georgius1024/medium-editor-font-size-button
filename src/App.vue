@@ -3,7 +3,7 @@
     <div style="display: flex">
       <div style="border-right: 1px solid #333; width: 500px">
         <h1>Title</h1>
-        <div ref="title" v-html="title" />
+        <div ref="title" v-html="title" v-once />
       </div>
       <div style="width: 400px">
         <code>{{ title }}</code>
@@ -13,7 +13,7 @@
     <div style="display: flex">
       <div style="border-right: 1px solid #333; width: 500px">
         <h1>Description</h1>
-        <div ref="description" v-html="description" />
+        <div ref="description" v-html="description" v-once />
       </div>
       <div style="width: 400px">
         <code>{{ description }}</code>
@@ -23,7 +23,7 @@
     <div style="display: flex">
       <div style="border-right: 1px solid #333; width: 500px">
         <h1>Button</h1>
-        <div ref="button" v-html="button" />
+        <div ref="button" v-html="button" v-once />
       </div>
       <div style="width: 400px">
         <code>{{ button }}</code>
@@ -83,20 +83,14 @@ export default {
   mounted() {
     this.titleEditor = new MediumEditor(this.$refs.title, this.options());
     this.titleInput = () =>
-      (this.title = getTextWithFixedLinksColor(
-        this.titleEditor.origElements.innerHTML,
-        this.linkColor
-      ));
+      this.updateTitle(this.titleEditor.origElements.innerHTML);
     this.titleEditor.subscribe("editableInput", this.titleInput);
     this.descriptionEditor = new MediumEditor(
       this.$refs.description,
       this.options()
     );
     this.descriptionInput = () =>
-      (this.description = getTextWithFixedLinksColor(
-        this.descriptionEditor.origElements.innerHTML,
-        this.linkColor
-      ));
+      this.updateDescription(this.descriptionEditor.origElements.innerHTML);
     this.descriptionEditor.subscribe("editableInput", this.descriptionInput);
     this.buttonEditor = new MediumEditor(this.$refs.button, this.options());
     this.buttonInput = () =>
@@ -136,8 +130,20 @@ export default {
             "removeFormat",
           ],
           static: true,
-          sticky: true,
+          sticky1: true,
           align: "center",
+          positionStaticToolbar(container) {
+            const scrollTop =
+              (this.document.documentElement &&
+                this.document.documentElement.scrollTop) ||
+              this.document.body.scrollTop;
+            const toolbarElement = this.getToolbarElement();
+            const containerRect = container.getBoundingClientRect();
+            const toolbarHeight = toolbarElement.offsetHeight;
+            toolbarElement.style.top = `${
+              containerRect.top + scrollTop - toolbarHeight - 20
+            }px`;
+          },
           updateOnEmptySelection: true,
         },
         placeholder: {
@@ -146,18 +152,25 @@ export default {
         },
       };
     },
-
-    updatebutton(operation) {
-      this.button = getTextWithFixedLinksColor(
-        operation.api.origElements.innerHTML,
-        this.linkColor
-      );
+    updateTitle(value) {
+      const fixed = getTextWithFixedLinksColor(value, this.linkColor);
+      if (fixed !== value) {
+        const selection = this.titleEditor.exportSelection();
+        this.titleEditor.setContent(fixed, 0);
+        this.$refs.title.innerHTML = fixed;
+        this.titleEditor.importSelection(selection);
+      }
+      this.title = fixed;
     },
-    updateDescription(operation) {
-      this.description = getTextWithFixedLinksColor(
-        operation.api.origElements.innerHTML,
-        this.linkColor
-      );
+    updateDescription(value) {
+      const fixed = getTextWithFixedLinksColor(value, this.linkColor);
+      if (fixed !== value) {
+        const selection = this.descriptionEditor.exportSelection();
+        this.descriptionEditor.setContent(fixed, 0);
+        this.$refs.description.innerHTML = fixed;
+        this.descriptionEditor.importSelection(selection);
+      }
+      this.description = fixed;
     },
     updateButton(operation) {
       this.button = getTextWithFixedLinksColor(
