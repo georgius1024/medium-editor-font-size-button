@@ -2,14 +2,8 @@
   <div id="app">
     <div style="display: flex">
       <div style="border-right: 1px solid #333; width: 500px">
-        <h1>Tiltle</h1>
-        <medium-editor
-          ref="title"
-          :text="title"
-          :options="options()"
-          custom-tag="div"
-          @edit="updateTitle"
-        />
+        <h1>Title</h1>
+        <div ref="title" v-html="title" />
       </div>
       <div style="width: 400px">
         <code>{{ title }}</code>
@@ -19,13 +13,7 @@
     <div style="display: flex">
       <div style="border-right: 1px solid #333; width: 500px">
         <h1>Description</h1>
-        <medium-editor
-          ref="description"
-          :text="description"
-          :options="options()"
-          custom-tag="div"
-          @edit="updateDescription"
-        />
+        <div ref="description" v-html="description" />
       </div>
       <div style="width: 400px">
         <code>{{ description }}</code>
@@ -35,13 +23,7 @@
     <div style="display: flex">
       <div style="border-right: 1px solid #333; width: 500px">
         <h1>Button</h1>
-        <medium-editor
-          ref="button"
-          :text="button"
-          :options="options()"
-          custom-tag="div"
-          @edit="updateButton"
-        />
+        <div ref="button" v-html="button" />
       </div>
       <div style="width: 400px">
         <code>{{ button }}</code>
@@ -58,9 +40,10 @@
 </template>
 
 <script>
+import MediumEditor from "medium-editor";
+
 import "medium-editor/dist/css/medium-editor.css";
 import "medium-editor/dist/css/themes/mani.css";
-import editor from "vue2-medium-editor";
 import FontSizeButton from "./FontSizeButton";
 import FontNameButton from "./FontNameButton";
 import LineHeightButton from "./LineHeightButton";
@@ -77,9 +60,6 @@ const getTextWithFixedLinksColor = (text, color) => {
 
 export default {
   name: "App",
-  components: {
-    "medium-editor": editor,
-  },
   data() {
     return {
       linkColor: "#00ff00",
@@ -90,14 +70,46 @@ export default {
       <p>It comes as no surprise the Gel-Lyte III is a fast growing popular choice for sneaker enthusiasts all over the world.</p>
       `,
       button: `<a href="#" class="button">Shop $ 242</a>`,
-      displayTitle: "",
+      displaybutton: "",
       displayDescription: "",
       displayButton: "",
       key: 1,
     };
   },
+  computed: {},
   created() {
-    this.paintLinks()
+    this.paintLinks();
+  },
+  mounted() {
+    this.titleEditor = new MediumEditor(this.$refs.title, this.options());
+    this.titleInput = () =>
+      (this.title = getTextWithFixedLinksColor(
+        this.titleEditor.origElements.innerHTML,
+        this.linkColor
+      ));
+    this.titleEditor.subscribe("editableInput", this.titleInput);
+    this.descriptionEditor = new MediumEditor(
+      this.$refs.description,
+      this.options()
+    );
+    this.descriptionInput = () =>
+      (this.description = getTextWithFixedLinksColor(
+        this.descriptionEditor.origElements.innerHTML,
+        this.linkColor
+      ));
+    this.descriptionEditor.subscribe("editableInput", this.descriptionInput);
+    this.buttonEditor = new MediumEditor(this.$refs.button, this.options());
+    this.buttonInput = () =>
+      (this.button = getTextWithFixedLinksColor(
+        this.buttonEditor.origElements.innerHTML,
+        this.linkColor
+      ));
+    this.buttonEditor.subscribe("editableInput", this.buttonInput);
+  },
+  beforeDestroy() {
+    this.titleEditor.unsubscribe("editableInput", this.titleInput);
+    this.descriptionEditor.unsubscribe("editableInput", this.descriptionInput);
+    this.buttonEditor.unsubscribe("editableInput", this.buttonInput);
   },
   methods: {
     options() {
@@ -134,11 +146,12 @@ export default {
         },
       };
     },
-    updateTitle(operation) {
-      // this.title = getTextWithFixedLinksColor(
-      //   operation.api.origElements.innerHTML,
-      //   this.linkColor
-      // );
+
+    updatebutton(operation) {
+      this.button = getTextWithFixedLinksColor(
+        operation.api.origElements.innerHTML,
+        this.linkColor
+      );
     },
     updateDescription(operation) {
       this.description = getTextWithFixedLinksColor(
@@ -153,13 +166,13 @@ export default {
       );
     },
     reset() {
-      this.title = this.$refs.title.$el.innerHTML;
+      this.button = this.$refs.button.$el.innerHTML;
       this.description = this.$refs.description.$el.innerHTML;
       this.button = this.$refs.button.$el.innerHTML;
       this.key = this.key + 1;
     },
     paintLinks() {
-      this.title = getTextWithFixedLinksColor(this.title, this.linkColor);
+      this.button = getTextWithFixedLinksColor(this.button, this.linkColor);
       this.description = getTextWithFixedLinksColor(
         this.description,
         this.linkColor
