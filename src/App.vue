@@ -1,51 +1,56 @@
 <template>
-  <div id="app">
-    <h1>Title</h1>
-    <div style="display: flex">
-      <div style="border-right: 1px solid #333; width: 500px">
+  <div id="app" class="container">
+    <h1 class="my-5 display fs-1 fw-bold text-center">Medium editor</h1>
+    <div class="row border-bottom mb-3">
+      <div class="col-4">
+        <h2>Title</h2>
+      </div>
+      <div class="col-4">
         <Editor v-model="title" @input="title = fixLinks($event)" />
       </div>
-      <div style="width: 400px">
+      <div class="col-4">
         <code>{{ title }}</code>
       </div>
     </div>
-    <hr />
-    <h1>Description</h1>
-    <div style="display: flex">
-      <div style="border-right: 1px solid #333; width: 500px">
+    <div class="row border-bottom mb-3">
+      <div class="col-4">
+        <h2>Description</h2>
+      </div>
+      <div class="col-4">
         <Editor v-model="description" @input="description = fixLinks($event)" />
       </div>
-      <div style="width: 400px">
+      <div class="col-4">
         <code>{{ description }}</code>
       </div>
     </div>
-    <hr />
-    <h1>Button</h1>
-    <div style="display: flex">
-      <div style="border-right: 1px solid #333; width: 500px">
+    <div class="row border-bottom mb-3">
+      <div class="col-4">
+        <h2>Button</h2>
+      </div>
+      <div class="col-4">
         <Editor v-model="button" @input="button = fixLinks($event)" />
       </div>
-      <div style="width: 400px">
+      <div class="col-4">
         <code>{{ button }}</code>
       </div>
     </div>
-    <hr />
-    <label>
-      Link color
-      <input v-model="linkColor" type="color" @input="paintLinks" />
-    </label>
+    <div class="row">
+      <div class="col-2">
+        <label for="color" class="form-label">Link color</label>
+        <input
+          id="color"
+          v-model="linkColor"
+          class="form-control"
+          style="min-height: 64px"
+          type="color"
+          @input="paintLinks"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-// import MediumEditor from "medium-editor";
-
-// import "medium-editor/dist/css/medium-editor.css";
-// import "medium-editor/dist/css/themes/mani.css";
-// import FontSizeButton from "./FontSizeButton";
-// import FontNameButton from "./FontNameButton";
-// import LineHeightButton from "./LineHeightButton";
-// import LinkForm from "./LinkForm";
 import Editor from "./Editor";
 
 const getTextWithFixedLinksColor = (text, color) => {
@@ -195,8 +200,6 @@ export default {
   font-family: Avenir;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-  margin-top: 60px;
 }
 .font-picker-widget {
   .font-name {

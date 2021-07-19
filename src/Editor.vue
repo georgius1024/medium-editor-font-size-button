@@ -59,6 +59,9 @@ export default {
                 0,
                 containerRect.top + scrollTop - toolbarHeight - 20
               )}px`;
+              const toolbarWidth = toolbarElement.offsetWidth;
+              const offsetLeft = containerRect.left - toolbarWidth / 4;
+              toolbarElement.style.left = `${offsetLeft}px`;
             },
             updateOnEmptySelection: true,
           },
