@@ -41,6 +41,7 @@ const FontNameButton = editor.MediumEditor.Extension.extend({
       this.on(element, "click", this.applyFont.bind(this, element.innerText));
     });
     this.on(this.base.origElements, "click", this.detectCurrentFont.bind(this));
+    this.on(this.button, "click", this.toggle.bind(this));
     this.base.subscribe("positionToolbar", this.saveSelection.bind(this));
   },
   getButton() {
@@ -59,7 +60,7 @@ const FontNameButton = editor.MediumEditor.Extension.extend({
     this.button.selection = this.base.exportSelection();
   },
   applyFont(font, event) {
-    console.log(arguments)
+    console.log(arguments);
     event.preventDefault();
     event.stopPropagation();
     this.currentFont = font; //this.button.querySelector("#font-name-button").innerText;
@@ -95,6 +96,10 @@ const FontNameButton = editor.MediumEditor.Extension.extend({
     }
     this.displayCurrentFont();
     this.base.checkContentChanged();
+  },
+  toggle(event) {
+    event.stopPropagation();
+    this.button.querySelector("#font-name-button").click();
   },
 });
 
