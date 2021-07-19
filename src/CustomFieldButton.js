@@ -49,17 +49,8 @@ const CustomFieldButton = editor.Extension.extend({
   addField(field, desc, event) {
     event.preventDefault();
     event.stopPropagation();
-
-    const selectionState = this.base.exportSelection();
     this.base.pasteHTML(`{{ ${field} | fallback: 'fallback' }}`)
     this.button.querySelector("#field-name-button").click()
-    // if (selectionState.start === selectionState.end) {
-    //   editor.extensions.anchor.prototype.showForm.apply(this);
-    //   this.form.firstChild.placeholder = this.placeholder;
-    // } else {
-      
-    //   this.completeFormSave(Object.assign({}, this.getFormOpts(), { value: content }));
-    // }    
   },
   // getInput() {
   //   return 'eswdlqff'
