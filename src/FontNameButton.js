@@ -25,19 +25,21 @@ const FontNameButton = editor.MediumEditor.Extension.extend({
     this.button = this.document.createElement("button");
     this.button.classList.add("medium-editor-action");
     this.button.innerHTML = `
-      <div class="font-picker-widget">
-        <select class="font-name" >
-          ${Object.keys(this.fonts)
-            .map((font) => `<option value="${font}">${font}</option>`)
-            .join("\n")}
-        </select>
+      <div class="dropdown-toggle" type="button" id="font-name-button" data-bs-toggle="dropdown" aria-expanded="false">
+      </div>
+      <div class="dropdown-menu" id="font-list" aria-labelledby="font-name-button">
+        ${Object.keys(this.fonts)
+          .map(
+            (font) =>
+              `<div><a class="dropdown-item" href="${font}">${font}</a></div>`
+          )
+          .join("\n")}
       </div>`;
     this.currentFont = "";
-    this.on(
-      this.button.querySelector(".font-name"),
-      "click",
-      this.applyFont.bind(this)
-    );
+    const links = this.button.querySelectorAll("#font-list a");
+    Array.from(links).forEach((element) => {
+      this.on(element, "click", this.applyFont.bind(this, element.innerText));
+    });
     this.on(this.base.origElements, "click", this.detectCurrentFont.bind(this));
     this.base.subscribe("positionToolbar", this.saveSelection.bind(this));
   },
@@ -50,17 +52,17 @@ const FontNameButton = editor.MediumEditor.Extension.extend({
     this.displayCurrentFont();
   },
   displayCurrentFont() {
-    const [currentFont] = this.currentFont.split('"').join('').split(',')
-    this.button
-      .querySelector(".font-name")
-      .querySelector(`[value="${currentFont}"]`).selected = true;
+    const [currentFont] = this.currentFont.split('"').join("").split(",");
+    this.button.querySelector("#font-name-button").innerText = currentFont;
   },
   saveSelection() {
-    this.button.querySelector(".font-name").selection =
-      this.base.exportSelection();
+    this.button.selection = this.base.exportSelection();
   },
-  applyFont() {
-    this.currentFont = this.button.querySelector(".font-name").value;
+  applyFont(font, event) {
+    console.log(arguments)
+    event.preventDefault();
+    event.stopPropagation();
+    this.currentFont = font; //this.button.querySelector("#font-name-button").innerText;
     const fontFamily = this.fonts[this.currentFont];
     const selectionState = this.base.exportSelection();
     if (selectionState.start === selectionState.end) {
