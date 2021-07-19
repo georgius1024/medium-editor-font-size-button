@@ -84,107 +84,10 @@ export default {
   created() {
     this.paintLinks();
   },
-  // mounted() {
-  //   this.titleEditor = new MediumEditor(this.$refs.title, this.options());
-  //   this.titleInput = () =>
-  //     this.updateTitle(this.titleEditor.origElements.innerHTML);
-  //   this.titleEditor.subscribe("editableInput", this.titleInput);
-  //   this.descriptionEditor = new MediumEditor(
-  //     this.$refs.description,
-  //     this.options()
-  //   );
-  //   this.descriptionInput = () =>
-  //     this.updateDescription(this.descriptionEditor.origElements.innerHTML);
-  //   this.descriptionEditor.subscribe("editableInput", this.descriptionInput);
-  //   this.buttonEditor = new MediumEditor(this.$refs.button, this.options());
-  //   this.buttonInput = () =>
-  //     (this.button = getTextWithFixedLinksColor(
-  //       this.buttonEditor.origElements.innerHTML,
-  //       this.linkColor
-  //     ));
-  //   this.buttonEditor.subscribe("editableInput", this.buttonInput);
-  // },
-  // beforeDestroy() {
-  //   this.titleEditor.unsubscribe("editableInput", this.titleInput);
-  //   this.descriptionEditor.unsubscribe("editableInput", this.descriptionInput);
-  //   this.buttonEditor.unsubscribe("editableInput", this.buttonInput);
-  // },
   methods: {
-    // options() {
-    //   return {
-    //     extensions: {
-    //       "font-size": new FontSizeButton(),
-    //       "font-name": new FontNameButton(),
-    //       "line-height": new LineHeightButton(),
-    //       "link-form": new LinkForm(() => this.paintLinks()),
-    //     },
-    //     toolbar: {
-    //       buttons: [
-    //         "font-name",
-    //         "font-size",
-    //         "line-height",
-    //         "bold",
-    //         "italic",
-    //         "underline",
-    //         "anchor",
-    //         "unorderedlist",
-    //         "justifyLeft",
-    //         "justifyCenter",
-    //         "justifyRight",
-    //         "removeFormat",
-    //       ],
-    //       static: true,
-    //       sticky1: true,
-    //       align: "center",
-    //       positionStaticToolbar(container) {
-    //         const scrollTop =
-    //           (this.document.documentElement &&
-    //             this.document.documentElement.scrollTop) ||
-    //           this.document.body.scrollTop;
-    //         const toolbarElement = this.getToolbarElement();
-    //         const containerRect = container.getBoundingClientRect();
-    //         const toolbarHeight = toolbarElement.offsetHeight;
-    //         toolbarElement.style.top = `${
-    //           containerRect.top + scrollTop - toolbarHeight - 20
-    //         }px`;
-    //       },
-    //       updateOnEmptySelection: true,
-    //     },
-    //     placeholder: {
-    //       text: "Type your text ПРЯМО ТУТ!!!",
-    //       hideOnClick: true,
-    //     },
-    //   };
-    // },
     fixLinks(value) {
       return getTextWithFixedLinksColor(value, this.linkColor);
     },
-    // updateTitle(value) {
-    //   const fixed = getTextWithFixedLinksColor(value, this.linkColor);
-    //   if (fixed !== value) {
-    //     const selection = this.titleEditor.exportSelection();
-    //     this.titleEditor.setContent(fixed, 0);
-    //     this.$refs.title.innerHTML = fixed;
-    //     this.titleEditor.importSelection(selection);
-    //   }
-    //   this.title = fixed;
-    // },
-    // updateDescription(value) {
-    //   const fixed = getTextWithFixedLinksColor(value, this.linkColor);
-    //   if (fixed !== value) {
-    //     const selection = this.descriptionEditor.exportSelection();
-    //     this.descriptionEditor.setContent(fixed, 0);
-    //     this.$refs.description.innerHTML = fixed;
-    //     this.descriptionEditor.importSelection(selection);
-    //   }
-    //   this.description = fixed;
-    // },
-    // updateButton(operation) {
-    //   this.button = getTextWithFixedLinksColor(
-    //     operation.api.origElements.innerHTML,
-    //     this.linkColor
-    //   );
-    // },
     paintLinks() {
       this.cs = this.fixLinks(this.cs);
       this.title = this.fixLinks(this.title);
