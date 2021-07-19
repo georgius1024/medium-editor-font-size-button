@@ -1,6 +1,6 @@
-import editor from "vue2-medium-editor";
+import editor from "medium-editor";
 
-const LineHeightButton = editor.MediumEditor.Extension.extend({
+const LineHeightButton = editor.Extension.extend({
   name: "line-height",
 
   init() {

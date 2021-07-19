@@ -60,10 +60,9 @@ const FontNameButton = editor.Extension.extend({
     this.button.selection = this.base.exportSelection();
   },
   applyFont(font, event) {
-    console.log(arguments);
     event.preventDefault();
     event.stopPropagation();
-    this.currentFont = font; //this.button.querySelector("#font-name-button").innerText;
+    this.currentFont = font;
     const fontFamily = this.fonts[this.currentFont];
     const selectionState = this.base.exportSelection();
     if (selectionState.start === selectionState.end) {
@@ -98,7 +97,7 @@ const FontNameButton = editor.Extension.extend({
     this.base.checkContentChanged();
   },
   toggle(event) {
-    const toggle = this.button.querySelector("#font-name-button")
+    const toggle = this.button.querySelector("#font-name-button");
     if (event.target !== toggle) {
       event.stopPropagation();
       toggle.click();

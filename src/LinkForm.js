@@ -1,7 +1,7 @@
-import editor from "vue2-medium-editor";
+import editor from "medium-editor";
 /* eslint-disable no-useless-escape */
 
-const LinkForm = editor.MediumEditor.extensions.form.extend({
+const LinkForm = editor.extensions.form.extend({
   name: "link-form",
   customClassOption: null,
   customClassOptionText: "Button",

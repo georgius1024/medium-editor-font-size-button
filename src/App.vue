@@ -28,7 +28,9 @@
         <h2>Button</h2>
       </div>
       <div class="col-4">
-        <Editor v-model="button" @input="button = fixLinks($event)" />
+        <a href="#" class="button" :style="{color: linkColor}">
+          <Editor v-model="button" @input="button = fixLinks($event)" />
+        </a>
       </div>
       <div class="col-4">
         <code>{{ button }}</code>
@@ -70,13 +72,13 @@ export default {
   data() {
     return {
       linkColor: "#00ff00",
-      title: `<p style="font-size: 36px;">Click <span style="font-size: 27px;">here</span>&nbsp; to edit it or <span style="color: rgb(240, 50, 230);">highlight</span> the text to style it</p>`,
+      title: `<p style="font-size: 36px;">Click <span style="font-size: 27px;"><a href="#">here</a></span>&nbsp; to edit it or <span style="color: rgb(240, 50, 230);">highlight</span> the text to style it</p>`,
       description: `
       <p>The iconic ASICS Tiger GEL-Lyte III was originally released in 1990.</p>
       <p>Having over two decades of performance heritage, it offers fine design detailing and a padded split tongue to eliminate tongue movement, built on a sleek silhouette.</p>
       <p>It comes as no surprise the Gel-Lyte III is a fast growing popular choice for sneaker enthusiasts all over the world.</p>
       `,
-      button: `<a href="#" class="button">Shop $ 242</a>`,
+      button: `Shop $ 242`,
       cs: `Visual Studio Code is a lightweight but powerful source code editor which runs on your desktop and is available for Windows, macOS and Linux. It comes with built-in support for JavaScript, TypeScript and Node.js and has a rich ecosystem of extensions for other languages (such as C++, C#, Java, Python, PHP, Go) and runtimes (such as .NET and Unity). Begin your journey with VS Code with these introductory videos.`,
     };
   },
@@ -101,6 +103,7 @@ export default {
 <style lang="scss">
 #app {
   font-family: 'Open Sans, Ubuntu, serif';
+  font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

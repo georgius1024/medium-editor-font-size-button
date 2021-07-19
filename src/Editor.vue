@@ -10,7 +10,9 @@ import "./Editor.scss";
 import FontSizeButton from "./FontSizeButton";
 import FontNameButton from "./FontNameButton";
 import LineHeightButton from "./LineHeightButton";
-import LinkForm from "./LinkForm";
+import CustomFieldButton from "./CustomFieldButton";
+
+//import LinkForm from "./LinkForm";
 
 export default {
   name: "Editor",
@@ -27,13 +29,15 @@ export default {
             "font-size": new FontSizeButton(),
             "font-name": new FontNameButton(),
             "line-height": new LineHeightButton(),
-            "link-form": new LinkForm(),
+            "custom-field": new CustomFieldButton(),
+            //"link-form": new LinkForm(),
           },
           toolbar: {
             buttons: [
               "font-name",
               "font-size",
               "line-height",
+              "custom-field",
               "bold",
               "italic",
               "underline",
@@ -78,55 +82,6 @@ export default {
     return {
       editor: null,
     };
-  },
-
-  computed: {
-    options1() {
-      return {
-        extensions: {
-          "font-size": new FontSizeButton(),
-          "font-name": new FontNameButton(),
-          "line-height": new LineHeightButton(),
-          "link-form": new LinkForm(),
-        },
-        toolbar: {
-          buttons: [
-            "font-name",
-            "font-size",
-            "line-height",
-            "bold",
-            "italic",
-            "underline",
-            "anchor",
-            "unorderedlist",
-            "justifyLeft",
-            "justifyCenter",
-            "justifyRight",
-            "removeFormat",
-          ],
-          static: true,
-          sticky1: true,
-          align: "center",
-          positionStaticToolbar(container) {
-            const scrollTop =
-              (this.document.documentElement &&
-                this.document.documentElement.scrollTop) ||
-              this.document.body.scrollTop;
-            const toolbarElement = this.getToolbarElement();
-            const containerRect = container.getBoundingClientRect();
-            const toolbarHeight = toolbarElement.offsetHeight;
-            toolbarElement.style.top = `${
-              containerRect.top + scrollTop - toolbarHeight - 20
-            }px`;
-          },
-          updateOnEmptySelection: true,
-        },
-        placeholder: {
-          text: "Type your text ПРЯМО ТУТ!!!",
-          hideOnClick: true,
-        },
-      };
-    },
   },
   watch: {
     value(newValue, oldValue) {
