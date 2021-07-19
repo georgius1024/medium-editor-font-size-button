@@ -1,11 +1,17 @@
+$background: #fff; //#dee7f0;
+
+.medium-editor-toolbar li button {
+  padding: 0 15px;
+}
 .medium-toolbar-arrow-under:after,
 .medium-toolbar-arrow-over:before {
   display: none;
 }
 
+
 .medium-editor-toolbar {
   border: 1px solid #cdd6e0;
-  background-color: #dee7f0;
+  background-color: $background;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
 }
 .medium-editor-toolbar li button {
@@ -37,13 +43,13 @@
 }
 
 .medium-editor-toolbar-form {
-  background: #dee7f0;
+  background: $background;
   color: #999;
   /* border-radius: 2px; */
 }
 .medium-editor-toolbar-form .medium-editor-toolbar-input {
   height: 50px;
-  background: #dee7f0;
+  background: $background;
   color: #40648a;
   box-sizing: border-box;
 }
@@ -52,7 +58,7 @@
 }
 
 .medium-editor-toolbar-anchor-preview {
-  background: #dee7f0;
+  background: $background;
   color: #40648a;
   /* border-radius: 2px; */
 }

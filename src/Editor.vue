@@ -6,7 +6,7 @@
 <script>
 import MediumEditor from "medium-editor";
 import "medium-editor/dist/css/medium-editor.css";
-import "./Editor.css";
+import "./Editor.scss";
 import FontSizeButton from "./FontSizeButton";
 import FontNameButton from "./FontNameButton";
 import LineHeightButton from "./LineHeightButton";

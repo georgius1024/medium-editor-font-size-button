@@ -197,29 +197,9 @@ export default {
 
 <style lang="scss">
 #app {
-  font-family: Avenir;
+  font-family: 'Open Sans, Ubuntu, serif';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-.font-picker-widget {
-  .font-name {
-    background-color: transparent;
-    padding: 4px;
-    outline: none;
-    border: none;
-    &:focus,
-    &:focus-visible {
-      outline: 1px solid white;
-    }
-    &:hover {
-      outline: 1px solid white;
-    }
-    & > * {
-      margin: 4px;
-      outline: none;
-      border: none;
-    }
-  }
 }
 .size-picker-widget {
   display: flex;
@@ -227,11 +207,10 @@ export default {
   align-items: center;
   .display {
     padding: 4px;
-    width: 40px;
+    width: 48px;
     border: none;
     background-color: transparent;
     color: inherit;
-    margin-right: 2px;
     &:focus,
     &:focus-visible {
       outline: 1px solid white;
@@ -241,10 +220,18 @@ export default {
     }
   }
   .controls {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    position: relative;
+    width: 12px;
+    height: 24px;
+    .inc {
+      top: 0;
+    }
+    .dec {
+      top: 12px;
+    }
     .icon {
+      position: absolute;
+      left: 0;
       width: 12px;
       height: 12px;
       cursor: pointer;

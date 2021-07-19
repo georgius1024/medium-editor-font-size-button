@@ -1,4 +1,4 @@
-import editor from "vue2-medium-editor";
+import editor from "medium-editor";
 
 function withPixels(size) {
   if (String(size).slice(-2) !== "px") {
@@ -14,7 +14,7 @@ function withoutPixels(size) {
   return +size;
 }
 
-const FontSizeButton = editor.MediumEditor.Extension.extend({
+const FontSizeButton = editor.Extension.extend({
   name: "font-size",
 
   init() {
@@ -24,16 +24,12 @@ const FontSizeButton = editor.MediumEditor.Extension.extend({
       <div class="size-picker-widget">
         <input class="display">
         <div class="controls">
-          <div class="inc icon">
-            <svg style="width:12px;height:12px" viewBox="0 0 24 24">
-              <path fill="currentColor" d="M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z" />
-            </svg>
-          </div>
-          <div class="dec icon">
-            <svg style="width:12px;height:12px" viewBox="0 0 24 24">
-              <path fill="currentColor" d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
-            </svg>
-          </div>
+          <svg class="inc icon" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z" />
+          </svg>
+          <svg class="dec icon" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
+          </svg>
         </div>
       </div>`;
     this.currentSize = "";

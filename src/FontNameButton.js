@@ -1,11 +1,11 @@
-import editor from "vue2-medium-editor";
+import editor from "medium-editor";
 
-const FontNameButton = editor.MediumEditor.Extension.extend({
+const FontNameButton = editor.Extension.extend({
   name: "font-name",
 
   fonts: {
     Arial: "'Arial', sans-serif",
-    Avenir: "'Avenir', sans-serif",
+    // Avenir: "'Avenir', sans-serif",
     Courier: "'Courier', monospace",
     "Faster One": "'Faster One', cursive",
     Kodchasan: "'Kodchasan', sans-serif",
@@ -98,8 +98,11 @@ const FontNameButton = editor.MediumEditor.Extension.extend({
     this.base.checkContentChanged();
   },
   toggle(event) {
-    event.stopPropagation();
-    this.button.querySelector("#font-name-button").click();
+    const toggle = this.button.querySelector("#font-name-button")
+    if (event.target !== toggle) {
+      event.stopPropagation();
+      toggle.click();
+    }
   },
 });
 
