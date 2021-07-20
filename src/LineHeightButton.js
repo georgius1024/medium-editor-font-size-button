@@ -67,8 +67,7 @@ const LineHeightButton = editor.Extension.extend({
     ).toFixed(1);
   },
   saveSelection() {
-    this.button.querySelector(".display").selection =
-      this.base.exportSelection();
+    this.selection =      this.base.exportSelection();
   },
   handleIncrement() {
     this.currentSize = Math.min(this.currentSize + 0.1, 4);
@@ -79,7 +78,7 @@ const LineHeightButton = editor.Extension.extend({
     this.applyCurrentSize();
   },
   handleKeyInput(event) {
-    const savedSelection = this.button.querySelector(".display").selection;
+    const savedSelection = this.selection;
     if (!savedSelection) {
       return;
     }

@@ -67,8 +67,7 @@ const FontSizeButton = editor.Extension.extend({
     this.button.querySelector(".display").value = this.currentSize;
   },
   saveSelection() {
-    this.button.querySelector(".display").selection =
-      this.base.exportSelection();
+    this.selection = this.base.exportSelection();
   },
   handleIncrement() {
     this.currentSize = withPixels(withoutPixels(this.currentSize) + 1);
@@ -79,7 +78,7 @@ const FontSizeButton = editor.Extension.extend({
     this.applyCurrentSize();
   },
   handleKeyInput(event) {
-    const savedSelection = this.button.querySelector(".display").selection;
+    const savedSelection = this.selection;
     if (!savedSelection) {
       return;
     }

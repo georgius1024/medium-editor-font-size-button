@@ -2,10 +2,9 @@ import editor from "medium-editor";
 
 const FontNameButton = editor.Extension.extend({
   name: "font-name",
-
+  // Google font must be loaded
   fonts: {
     Arial: "'Arial', sans-serif",
-    // Avenir: "'Avenir', sans-serif",
     Courier: "'Courier', monospace",
     "Faster One": "'Faster One', cursive",
     Kodchasan: "'Kodchasan', sans-serif",
@@ -42,7 +41,6 @@ const FontNameButton = editor.Extension.extend({
     });
     this.on(this.base.origElements, "click", this.detectCurrentFont.bind(this));
     this.on(this.button, "click", this.toggle.bind(this));
-    this.base.subscribe("positionToolbar", this.saveSelection.bind(this));
   },
   getButton() {
     return this.button;
@@ -55,9 +53,6 @@ const FontNameButton = editor.Extension.extend({
   displayCurrentFont() {
     const [currentFont] = this.currentFont.split('"').join("").split(",");
     this.button.querySelector("#font-name-button").innerText = currentFont;
-  },
-  saveSelection() {
-    this.button.selection = this.base.exportSelection();
   },
   applyFont(font, event) {
     event.preventDefault();
