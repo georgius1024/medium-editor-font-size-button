@@ -5,4 +5,7 @@ module.exports = {
       errors: false,
     },
   },
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/medium-editor-font-size-button/'
+    : '/'  
 };
